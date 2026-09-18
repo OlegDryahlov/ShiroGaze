@@ -1,0 +1,9 @@
+[app]
+github = "https://github.com/OlegDryahlov/"
+version = "0.1.1"
+
+
+[files]
+app_description = ["data", "description.txt"]
+app_logo = ["data", "logo.txt"]
+target_urls = ["data", "url.json"]

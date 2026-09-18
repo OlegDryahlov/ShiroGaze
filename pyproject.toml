@@ -9,6 +9,7 @@ license = "MIT License"
 python = "^3.10"
 termcolor = "^3.3.0"
 requests = "^2.34.2"
+tomli = "^2.4.1"
 
 [tool.poetry.dev-dependencies]
 
