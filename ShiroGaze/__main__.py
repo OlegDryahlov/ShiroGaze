@@ -6,7 +6,7 @@ import requests
 
 import config
 from progress_bar import ProgressBar
-from utils import load_file
+from load_file import load_file
 
 
 def main() -> None:

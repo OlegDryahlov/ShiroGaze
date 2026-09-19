@@ -3,7 +3,7 @@
 
 from pathlib import Path
 
-from utils import load_file
+from load_file import load_file
 
 
 # Путь к папке приложения
