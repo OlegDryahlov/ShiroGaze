@@ -7,3 +7,9 @@ version = "0.1.2"
 app_description = ["data", "description.txt"]
 app_logo = ["data", "logo.txt"]
 target_urls = ["data", "url.json"]
+
+[progress_bar]
+fill = "#"
+message = "Поиск по имени пользователя"
+suffix_base = "(%(index)d / %(max)d) | {site}"
+width = 20

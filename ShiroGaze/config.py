@@ -13,6 +13,7 @@ APP_PATH: Path = Path(__file__).parent.parent
 _config_file: str = "config.toml"
 _config_path: Path = APP_PATH.joinpath(_config_file)
 _config: dict = load_file(_config_path)
+_config_progress_bar = _config["progress_bar"]
 
 # Чтение и настройка путей к данным приложения
 _app_description_path: Path = APP_PATH.joinpath(
@@ -32,3 +33,9 @@ APP_LOGO: str = load_file(_app_logo_path)
 
 # Ссылки на Интернет-сайты по которым будет вестись поиск пользователя
 TARGET_URLS: dict = load_file(_target_urls_path)
+
+# Настройки шкалы прогресса
+PROGRESS_BAR_FILL: str = _config_progress_bar["fill"]
+PROGRESS_BAR_MESSAGE: str = _config_progress_bar["message"]
+PROGRESS_BAR_SUFFIX_BASE: str = _config_progress_bar["suffix_base"]
+PROGRESS_BAR_WIDTH: int = _config_progress_bar["width"]
