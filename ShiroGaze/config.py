@@ -16,11 +16,15 @@ _config: dict = load_file(_config_path)
 _config_progress_bar = _config["progress_bar"]
 
 # Чтение и настройка путей к данным приложения
+_app_about_path: Path = APP_PATH.joinpath(*_config["files"]["app_about"])
 _app_description_path: Path = APP_PATH.joinpath(
     *_config["files"]["app_description"]
 )
 _app_logo_path: Path = APP_PATH.joinpath(*_config["files"]["app_logo"])
 _target_urls_path: Path = APP_PATH.joinpath(*_config["files"]["target_urls"])
+
+# О приложении
+APP_ABOUT: str = load_file(_app_about_path)
 
 # Описание приложения
 APP_DESCRIPTION: str = load_file(_app_description_path).format(
