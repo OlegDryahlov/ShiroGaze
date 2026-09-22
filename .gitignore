@@ -1,3 +1,4 @@
 poetry.lock
 run.sh
 __pycache__
+.flake8
