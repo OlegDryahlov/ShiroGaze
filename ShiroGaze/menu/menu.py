@@ -1,11 +1,8 @@
 # -*- coding: utf-8 -*-
 """Главный управляющий класс."""
 
-import sys
-
 import config
-from .about import About
-from .search_by_username import SearchByUsername
+from .modules import About, Exit, SearchByUsername
 
 
 class Menu:
@@ -17,25 +14,19 @@ class Menu:
 
     def __init__(self):
         """Инициализация класса. """
-        self._about: About = About()  # Действие "О приложении"
+        self._about: About = About()  # Выводит информацию о приложении
 
-        self._run: bool = True  # Флаг работы приложения
+        self._exit: Exit = Exit()  # Выход из приложения
 
-        # Действие "Поиск по имени пользователя"
+        # Выполняет поиск по имени пользователя
         self._search_by_username: SearchByUsername = SearchByUsername()
 
-        # Словарь действий доступных пользователю, где:
-        # ключ - текст с описанием действия, который будет выведен пользователю
-        # значение - функция, которая будет выполнения действием
-        self._options: dict = {
-            "Поиск по имени пользователя": self._search_by_username.show,
-            "О программе": self._about.show,
-            "Выход": self._exit
-        }
-
-    def _exit(self) -> None:
-        """Переключает флаг работы приложения на False."""
-        self._run = False
+        # Список доступного пользователю функционала приложения
+        self._options: list = [
+            self._search_by_username,
+            self._about,
+            self._exit
+        ]
 
     def _input_user_choice(self) -> int:
         """Запрашивает у пользователя выбор действия.
@@ -71,21 +62,15 @@ class Menu:
         # Выводится один раз при запуске приложения
         print(f"\n{config.APP_LOGO}\n\n{config.APP_DESCRIPTION}")
 
-        while self._run:
+        while True:
             print()  # Просто для более красивого вывода
 
             # Вывод списока доступных действий
-            for i, option in enumerate(self._options.keys()):
-                print(f"[{i + 1}] {option}")
+            for i, option in enumerate(self._options):
+                print(f"[{i + 1}] {option.button_text}")
 
-            # Запрос у пользователя выбор действия
+            # Запрос у пользователя выбора действия
             option: int = self._input_user_choice()
 
-            # Выполнение функции согласно выбора пользователя
-            list(self._options.values())[option - 1]()
-
-        # Выполняется, если пользователь выберет действие "Выход":
-        # будет вызвана функция self._exit(), которая установит значение
-        # self._run = False, что позволит выйти из цикла while
-        print("\nЗавершение работы.")
-        sys.exit()
+            # Выполнение модуля согласно выбора пользователя
+            self._options[option - 1].show()

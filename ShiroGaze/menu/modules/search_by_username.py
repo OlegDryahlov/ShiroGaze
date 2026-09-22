@@ -12,6 +12,8 @@ class SearchByUsername:
 
     def __init__(self):
         """Инициализация класса."""
+        self.__button_text: str = "Поиск по имени пользователя"
+
         # Шкала прогресса поиска по сайтам
         self._progress_bar: Bar = Bar(
             fill=config.PROGRESS_BAR_FILL,
@@ -27,6 +29,11 @@ class SearchByUsername:
         }
 
         self._target_urls: dict = config.TARGET_URLS
+
+    @property
+    def button_text(self) -> str:
+        """Текст кнопки (опции) в меню приложения."""
+        return self.__button_text
 
     def _get_username(self) -> str:
         """Запрашивает у пользователя ввод имени пользователя.
@@ -98,7 +105,12 @@ class SearchByUsername:
 
             self._progress_bar.next()
 
-    def show(self):
+    def show(self) -> None:
+        """
+        Запуск модуля.
+
+        Выполняет поиск по списку ресурсов по указанному имени пользователя.
+        """
         # Выводит информацию о действии
         print("\n[Поиск по имени пользователя]")
         print("Выполняет поиск по 400+ сайтам по указанному имени "
