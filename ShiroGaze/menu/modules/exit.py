@@ -3,13 +3,16 @@
 
 import sys
 
+from text import get_text as t
+
 
 class Exit:
     """Обеспечивает закрытие приложения."""
 
     def __init__(self):
         """Инициализация класса."""
-        self.__button_text = "Выход"
+        self.__button_text: str = t("exit.button")
+        self.__message: str = t("exit.message")
 
     @property
     def button_text(self) -> str:
@@ -22,5 +25,5 @@ class Exit:
 
         Выводит сообщение и завершает работу приложения.
         """
-        print("\nЗавершение работы.")
+        print(self.__message)
         sys.exit()

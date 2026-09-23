@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 """Главный управляющий класс."""
 
+from rich import print
+
 import config
+from text import get_text as t
 from .modules import About, Exit, SearchByUsername
 
 
@@ -39,7 +42,8 @@ class Menu:
 
             try:
                 # Ввод пользователя
-                user_input: int = int(input("\nВыберите действие: "))
+                print(t("menu.input.message"), end="")
+                user_input: int = int(input())
 
                 # Число должно быть положительным и не превышать
                 # количество доступных дейтсвий.
@@ -51,8 +55,10 @@ class Menu:
             # Пользователь ввёл некорректный тип данных (не число)
             # или число не входит в множество доступных действий
             except ValueError:
-                print("\nНекорректный ввод!")
-                print(f"Введите число от 1 до {len(self._options)}.")
+                error_text: str = t("menu.input.error").format(
+                    max_length=len(self._options)
+                )
+                print(error_text)
 
         return user_input
 
@@ -60,7 +66,13 @@ class Menu:
         """Запуск работы приложения."""
         # Вывод логотипа и описания приложения
         # Выводится один раз при запуске приложения
-        print(f"\n{config.APP_LOGO}\n\n{config.APP_DESCRIPTION}")
+        print(t("menu.app.logo"))
+        print(
+            t("menu.app.description").format(
+                github=config.GITHUB,
+                version=config.VERSION
+            )
+        )
 
         while True:
             print()  # Просто для более красивого вывода

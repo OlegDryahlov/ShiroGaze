@@ -5,6 +5,7 @@
 # обновления и автообновление приложения.
 
 import config
+from text import get_text as t
 
 
 class About:
@@ -12,8 +13,10 @@ class About:
 
     def __init__(self):
         """Инициализация класса."""
-        self.__button_text: str = "О приложении"
-        self._app_about: str = config.APP_ABOUT
+        self.__button_text: str = t("about.button")
+        self._app_about: str = t("about.message").format(
+            version=config.VERSION
+        )
 
     @property
     def button_text(self) -> str:
@@ -26,4 +29,4 @@ class About:
 
         Выводит информацию о приложении.
         """
-        print(f"\n{self._app_about}")
+        print(self._app_about)

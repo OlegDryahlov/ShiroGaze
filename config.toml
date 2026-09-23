@@ -1,5 +1,5 @@
 [app]
-github = "https://github.com/OlegDryahlov/"
+github = "https://github.com/OlegDryahlov/ShiroGaze"
 version = "0.1.3"
 
 
@@ -8,6 +8,7 @@ app_about = ["data", "about.txt"]
 app_description = ["data", "description.txt"]
 app_logo = ["data", "logo.txt"]
 target_urls = ["data", "url.json"]
+text = ["data", "text.toml"]
 
 [progress_bar]
 fill = "#"

@@ -1,4 +1,0 @@
-Shiro Gaze - небольшой и простой OSINT-инструмент написанный на Python.
-Разработчик: OlegDryahlov
-GitHub: {github}
-Версия: {version}

@@ -3,8 +3,12 @@
 
 import requests
 from progress.bar import Bar
+from rich import print
+from rich.console import Console
+from rich.table import Table
 
 import config
+from text import get_text as t
 
 
 class SearchByUsername:
@@ -12,7 +16,7 @@ class SearchByUsername:
 
     def __init__(self):
         """Инициализация класса."""
-        self.__button_text: str = "Поиск по имени пользователя"
+        self.__button_text: str = t("SBU.button")
 
         # Шкала прогресса поиска по сайтам
         self._progress_bar: Bar = Bar(
@@ -43,7 +47,8 @@ class SearchByUsername:
         """
         while True:
             # Ввод имени пользователя
-            username: str = input("\nВведите имя пользователя: ")
+            print(t("SBU.input.message"), end="")
+            username: str = input()
 
             # Имя пользователя не может быть пустым. Самая минимальная
             # проверка. Если имя пользователя не пустое - прерывает цикл
@@ -51,24 +56,24 @@ class SearchByUsername:
                 break
 
             # Сообщение о некорректом вводе
-            print("\nНекорректный ввод!")
-            print("Имя пользователя не может быть пустым.")
+            print(t("SBU.input.error"))
 
         return username
 
     def _output_result(self) -> None:
         """Выводит результат поиска пользователю."""
-        print(f"\n\nНайдено резульататов: {len(self._result['found'])}")
-
-        # Наибольшая длина названия сайта из списка
-        # Используется для более красивого вывода
-        max_len: int = len(max([i[0] for i in self._result["found"]], key=len))
-
-        # Вывод результата поиска
+        table: Table = Table(
+            title=t("SBU.output.table.title").format(
+                results_length=len(self._result["found"])
+            )
+        )
+        table.add_column(t("SBU.output.column.site"))
+        table.add_column(t("SBU.output.column.url"))
         for i in self._result["found"]:
-            site = i[0].ljust(max_len, " ")  # Название сайта
-            url = i[1]  # Ссылка на профиль пользователя
-            print(f"{site} | {url}")
+            table.add_row(*i)
+
+        console: Console = Console()
+        console.print(table)
 
     def _search_by_username(self, username: str) -> None:
         """Выполняет поиск по имени пользователя.
@@ -112,10 +117,7 @@ class SearchByUsername:
         Выполняет поиск по списку ресурсов по указанному имени пользователя.
         """
         # Выводит информацию о действии
-        print("\n[Поиск по имени пользователя]")
-        print("Выполняет поиск по 400+ сайтам по указанному имени "
-              "пользователя.\nНаходится в разработке, будет улучшен "
-              "в следующих обновлениях.")
+        print(t("SBU.message"))
 
         # Запрашивает ввод имени пользователя
         username: str = self._get_username()
