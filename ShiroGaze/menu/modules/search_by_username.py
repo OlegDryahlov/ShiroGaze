@@ -6,10 +6,12 @@
 базе ресурсов из файла конфигурации.
 """
 
+import re
 from concurrent.futures import as_completed, ThreadPoolExecutor
 
 import requests
 from progress.bar import Bar
+from random_header_generator import HeaderGenerator
 from rich import console, print, table
 
 import config
@@ -28,6 +30,9 @@ class SearchByUsername:
     def __init__(self):
         """Инициализация модуля."""
         self.__button_text: str = t("SBU.button")
+
+        _headers_generator = HeaderGenerator()
+        self._headers = _headers_generator(country="us")
 
         # Шкала прогресса поиска по сайтам
         self._progress_bar: Bar = Bar(
@@ -95,7 +100,7 @@ class SearchByUsername:
         with ThreadPoolExecutor(max_workers=10) as executor:
             future_to_platform = {
                 executor.submit(
-                    self._send_request, url["url_user"], username
+                    self._send_request, site, url["url_user"], username
                 ): site
                 for site, url in self._target_urls.items()
             }
@@ -105,23 +110,38 @@ class SearchByUsername:
                     config.PROGRESS_BAR_SUFFIX_BASE.format(site=site)
                 try:
                     result = future.result()
-                    if result:
+                    if result is not None:
                         self._result["found"].append([site, result])
                 except Exception:
                     pass
                 self._progress_bar.next()
             self._progress_bar.finish()
 
-
-    def _send_request(self, url: str, username: str) -> str | None:
+    def _send_request(self, site, url: str, username: str) -> str | None:
         url: str = url.format(username)
         try:
-            status_code: int = requests.get(url, timeout=5).status_code
-            if status_code == 200:
-                return url
-            return None
+            response: requests.Response = requests.get(
+                headers=self._headers, timeout=5, url=url
+            )
         except Exception:
             return None
+        if response.status_code != 200:
+            return None
+        response_text: str = response.text.lower()
+        response_body: list = re.findall(
+            "<body>(.*?)</body>", response_text, re.DOTALL
+        )
+        if not response_body:
+            return None
+        if not response_body[0].strip():
+            return None
+        for i in ["404", "not found", "not exist"]:
+            if i in response_text:
+                return None
+        if username not in response.url or "404" in response.url:
+            return None
+        return url
+ 
 
     def show(self) -> None:
         """
