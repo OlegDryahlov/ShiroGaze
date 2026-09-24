@@ -1,10 +1,6 @@
 # -*- coding: utf-8 -*-
 """Утилита для работы с текстом приложения."""
 
-import os
-
-import config
-
 
 _text: dict | None = None
 

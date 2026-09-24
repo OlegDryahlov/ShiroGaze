@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
-"""Поиск по имени пользователя."""
+"""
+Модуль "Поиск по имени пользователя".
+
+Выполняет поиск по имени пользователя с помощью библиотеки requests по
+базе ресурсов из файла конфигурации.
+"""
 
 import requests
 from progress.bar import Bar
-from rich import print
-from rich.console import Console
-from rich.table import Table
+from rich import console, print, table
 
 import config
 from .options import option_confirm
@@ -13,10 +16,15 @@ from utils.text import get_text as t
 
 
 class SearchByUsername:
-    """Поиск по имени пользователя."""
+    """
+    Модуль "Поиск по имени пользователя".
+
+    Запрашивает у пользователя приложения имя пользователя для поиска и
+    выполняет поиск по имеющейся базе ссылок.
+    """
 
     def __init__(self):
-        """Инициализация класса."""
+        """Инициализация модуля."""
         self.__button_text: str = t("SBU.button")
 
         # Шкала прогресса поиска по сайтам
@@ -47,7 +55,6 @@ class SearchByUsername:
             str: Имя пользователя.
         """
         while True:
-            # Ввод имени пользователя
             print(t("SBU.input.message"), end="")
             username: str = input()
 
@@ -56,25 +63,24 @@ class SearchByUsername:
             if len(username.strip()) != 0:
                 break
 
-            # Сообщение о некорректом вводе
             print(t("SBU.input.error"))
 
         return username
 
     def _output_result(self) -> None:
-        """Выводит результат поиска пользователю."""
-        table: Table = Table(
+        """Выводит результат поиска пользователю в виде таблицы."""
+        result_table: table.Table = table.Table(
             title=t("SBU.output.table.title").format(
                 results_length=len(self._result["found"])
             )
         )
-        table.add_column(t("SBU.output.column.site"))
-        table.add_column(t("SBU.output.column.url"))
+        result_table.add_column(t("SBU.output.column.site"))
+        result_table.add_column(t("SBU.output.column.url"))
         for i in self._result["found"]:
-            table.add_row(*i)
+            result_table.add_row(*i)
 
-        console: Console = Console()
-        console.print(table)
+        con: console.Console = console.Console()
+        con.print(result_table)
 
     def _search_by_username(self, username: str) -> None:
         """Выполняет поиск по имени пользователя.
@@ -90,11 +96,9 @@ class SearchByUsername:
             self._progress_bar.suffix = config.PROGRESS_BAR_SUFFIX_BASE.format(
                 site=site
             )
-            # Ссылка на профиль пользователя на сайте
             url: str = urls["url_user"].format(username)
 
             try:
-                # Статус код запроса на профиль пользователя
                 status_code: int = requests.get(url, timeout=5).status_code
 
                 # Статус код "The HTTP 200 OK" зачастую указывает на наличие
@@ -111,23 +115,23 @@ class SearchByUsername:
 
             self._progress_bar.next()
 
+        self._progress_bar.finish()
+
     def show(self) -> None:
         """
         Запуск модуля.
 
         Выполняет поиск по списку ресурсов по указанному имени пользователя.
         """
-        # Выводит информацию о действии
-        print(t("SBU.message"), end="\n\n")
+        print(t("SBU.message"), end="\n\n")  # Выводит информацию о действии
 
-        if not option_confirm():
+        # Запрашивает подтверждение действия
+        if not option_confirm():  # (защита от неправильного ввода)
             return
 
-        # Запрашивает ввод имени пользователя
-        username: str = self._get_username()
+        username: str = self._get_username()  # Ввод имени пользователя
 
         # Выполняет поиск имени пользователя по ресурсам
         self._search_by_username(username=username)
 
-        # Выводит результат поиска пользователю
-        self._output_result()
+        self._output_result()  # Выводит результат поиска пользователю

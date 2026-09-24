@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
-"""Выводит информацию о приложении."""
+"""
+Модуль "О приложении".
 
-# В дальнейшем функционал будет расширен. Планируется добавить проверку на
-# обновления и автообновление приложения.
+Выводит описание приложения, его версию, разработчика и т.д.
+В дальнейшем функционал модуля будент расширен.
+"""
 
 from rich import print
 
@@ -11,14 +13,15 @@ from utils.text import get_text as t
 
 
 class About:
-    """Выводит информацию о приложении."""
+    """
+    Модуль "О приложении".
+
+    Выводит информацию о приложении.
+    """
 
     def __init__(self):
-        """Инициализация класса."""
+        """Инициализация модуля."""
         self.__button_text: str = t("about.button")
-        self._app_about: str = t("about.message").format(
-            version=config.VERSION
-        )
 
     @property
     def button_text(self) -> str:
@@ -31,4 +34,5 @@ class About:
 
         Выводит информацию о приложении.
         """
-        print(self._app_about)
+        message: str = t("about.message").format(version=config.VERSION)
+        print(message)

@@ -4,9 +4,9 @@
 from rich import print
 
 import config
-from utils.text import clear, get_text as t
 from .modules import About, Exit, SearchByUsername
 from .modules.options import option_continue
+from utils.text import clear, get_text as t
 
 
 class Menu:
@@ -18,18 +18,11 @@ class Menu:
 
     def __init__(self):
         """Инициализация класса. """
-        self._about: About = About()  # Выводит информацию о приложении
-
-        self._exit: Exit = Exit()  # Выход из приложения
-
-        # Выполняет поиск по имени пользователя
-        self._search_by_username: SearchByUsername = SearchByUsername()
-
         # Список доступного пользователю функционала приложения
         self._options: list = [
-            self._search_by_username,
-            self._about,
-            self._exit
+            SearchByUsername,
+            About,
+            Exit
         ]
 
     def _input_user_choice(self) -> int:
@@ -38,7 +31,6 @@ class Menu:
         Returns:
             int: Номер действия, которое выбрал пользователь.
         """
-        # Бесконечный цикл, пока пользователь не введёт корректное значение
         while True:
 
             try:
@@ -66,34 +58,28 @@ class Menu:
     def show(self) -> None:
         """Запуск работы приложения."""
         while True:
-            clear()
+            clear()  # Очищает вывод в терминал
 
-            print()
-            print(t("menu.app.logo"))
-            print()
-            print(
-                t("menu.app.description").format(
-                    github=config.GITHUB,
-                    version=config.VERSION
-                )
+            # Выводит логотип и описание приложения
+            logo: str = t("menu.app.logo")
+            description: str = t("menu.app.description").format(
+                github=config.GITHUB, version=config.VERSION
             )
-            print()
+            print("\n" + logo + "\n\n" + description, end="\n\n")
 
-            # Вывод списока доступных действий
+            # Вывод списка доступных действий
             for i, option in enumerate(self._options):
-                print(f"[{i + 1}] {option.button_text}")
+                print(f"[{i + 1}] {option().button_text}")
             print()
 
             # Запрос у пользователя выбора действия
             option: int = self._input_user_choice()
 
-            clear()
-            print()
-            print(t("menu.app.logo"))
-            print()
+            clear()  # Очищает вывод в терминал и выводит логотип приложения
+            print("\n" + logo, end="\n\n")
 
             # Выполнение модуля согласно выбора пользователя
-            self._options[option - 1].show()
+            self._options[option - 1]().show()
 
-            print()
+            print()  # Запрашивает ввод ENTER перед продолжением выполнения
             option_continue()
