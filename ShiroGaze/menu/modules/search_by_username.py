@@ -8,7 +8,8 @@ from rich.console import Console
 from rich.table import Table
 
 import config
-from text import get_text as t
+from .options import option_confirm
+from utils.text import get_text as t
 
 
 class SearchByUsername:
@@ -117,7 +118,10 @@ class SearchByUsername:
         Выполняет поиск по списку ресурсов по указанному имени пользователя.
         """
         # Выводит информацию о действии
-        print(t("SBU.message"))
+        print(t("SBU.message"), end="\n\n")
+
+        if not option_confirm():
+            return
 
         # Запрашивает ввод имени пользователя
         username: str = self._get_username()

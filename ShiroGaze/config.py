@@ -3,7 +3,7 @@
 
 from pathlib import Path
 
-from load_file import load_file
+from utils.load_file import load_file
 
 
 # Путь к папке приложения
@@ -16,16 +16,12 @@ _config: dict = load_file(_config_path)
 _config_progress_bar = _config["progress_bar"]
 
 # Чтение и настройка путей к данным приложения
-_app_about_path: Path = APP_PATH.joinpath(*_config["files"]["app_about"])
 _app_description_path: Path = APP_PATH.joinpath(
     *_config["files"]["app_description"]
 )
 _app_logo_path: Path = APP_PATH.joinpath(*_config["files"]["app_logo"])
 _target_urls_path: Path = APP_PATH.joinpath(*_config["files"]["target_urls"])
 _text_path: Path = APP_PATH.joinpath(*_config["files"]["text"])
-
-# О приложении
-APP_ABOUT: str = load_file(_app_about_path)
 
 # Ссылка на GitHub проекта
 GITHUB: str = _config["app"]["github"]

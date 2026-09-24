@@ -4,8 +4,10 @@
 # В дальнейшем функционал будет расширен. Планируется добавить проверку на
 # обновления и автообновление приложения.
 
+from rich import print
+
 import config
-from text import get_text as t
+from utils.text import get_text as t
 
 
 class About:

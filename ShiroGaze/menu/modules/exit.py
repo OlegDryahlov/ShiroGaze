@@ -3,7 +3,10 @@
 
 import sys
 
-from text import get_text as t
+from rich import print
+
+from .options import option_continue
+from utils.text import clear, get_text as t
 
 
 class Exit:
@@ -25,5 +28,7 @@ class Exit:
 
         Выводит сообщение и завершает работу приложения.
         """
-        print(self.__message)
+        print(self.__message + "\n")
+        option_continue()
+        clear()
         sys.exit()

@@ -3,21 +3,22 @@
 button = "О приложении"
 
 message = """
-Shiro Gaze - OSINT-инструмент на Python, поддерживающий поиск по имени
-пользователя более чем на 400 ресурсах. В данный момент находится в разработке,
-функционал приложения будет улучшаться и дополняться в ближайших обновлениях.
+[bold]Shiro Gaze[/bold] - OSINT-инструмент на Python, поддерживающий поиск по 
+имени пользователя более чем на 400 ресурсах.
+[bold red]В данный момент находится в разработке,[/bold red] функционал приложения 
+будет улучшаться и дополняться в ближайших обновлениях.
 
-Разработчик: OlegDryahlov
-Лиценция: MIT License
-Версия: {version}
+[bold]Разработчик:[/bold] OlegDryahlov
+[bold]Лиценция:[/bold] MIT License
+[bold]Версия:[/bold] {version}
 """
 
 
 [exit]
 
-button = "[red]Выход[/red]"
+button = "[bold red]Выход[/bold red]"
 
-message = "Завершение работы."
+message = "[bold red]Завершение работы.[/bold red]"
 
 
 [menu]
@@ -44,13 +45,21 @@ input.error = """
 """
 input.message = "[bold green]Ввод команды: [/bold green]"
 
+[options.confirm]
+message = "[bold green]Продолжить? (y/n): [/bold green] "
+interrupted = "[bold red]Прервано пользователем.[/bold red]"
+
+[options.continue]
+message = "[blink bold green]Нажмите ENTER, чтобы продолжить...[/blink bold green]"
+
 [SBU]  # "Search By Username"
 button = "Поиск по имени пользователя"
 
 message = """
-[bold][Поиск по имени пользователя][/bold]
+[bold]Поиск по имени пользователя[/bold]
+
 Выполняет поиск по 400+ сайтам по указанному имени пользователя.
-[red]Находится в разработке, будет улучшен в следующих обновлениях.[/red]
+[bold red]Находится в разработке, будет улучшен в следующих обновлениях.[/bold red]
 """
 
 output.column.site = "Сайт"

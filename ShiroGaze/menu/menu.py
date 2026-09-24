@@ -4,8 +4,9 @@
 from rich import print
 
 import config
-from text import get_text as t
+from utils.text import clear, get_text as t
 from .modules import About, Exit, SearchByUsername
+from .modules.options import option_continue
 
 
 class Menu:
@@ -64,25 +65,35 @@ class Menu:
 
     def show(self) -> None:
         """Запуск работы приложения."""
-        # Вывод логотипа и описания приложения
-        # Выводится один раз при запуске приложения
-        print(t("menu.app.logo"))
-        print(
-            t("menu.app.description").format(
-                github=config.GITHUB,
-                version=config.VERSION
-            )
-        )
-
         while True:
-            print()  # Просто для более красивого вывода
+            clear()
+
+            print()
+            print(t("menu.app.logo"))
+            print()
+            print(
+                t("menu.app.description").format(
+                    github=config.GITHUB,
+                    version=config.VERSION
+                )
+            )
+            print()
 
             # Вывод списока доступных действий
             for i, option in enumerate(self._options):
                 print(f"[{i + 1}] {option.button_text}")
+            print()
 
             # Запрос у пользователя выбора действия
             option: int = self._input_user_choice()
 
+            clear()
+            print()
+            print(t("menu.app.logo"))
+            print()
+
             # Выполнение модуля согласно выбора пользователя
             self._options[option - 1].show()
+
+            print()
+            option_continue()

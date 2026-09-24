@@ -2,8 +2,8 @@
 """ShiroGaze - Простой инструмент для OSINT."""
 
 import config
-import text
 from menu import Menu
+from utils import text
 
 
 def main() -> None:

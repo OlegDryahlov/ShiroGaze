@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Поиск по имени пользователя."""
+"""Утилита для работы с текстом приложения."""
 
 import os
 
@@ -9,7 +9,8 @@ import config
 _text: dict | None = None
 
 
-def __clear() -> None:  # Заготовка на будущее
+def clear() -> None:
+    """Очищает вывод в терминал."""
     print("\033[H\033[2J", end="")
 
 
@@ -36,6 +37,10 @@ def get_text(text_header: str) -> dict | str:
     # Проходим по всем указанным заголовкам, начиная со второго
     for header in text_path[1:]:
         text_output = text_output[header]
+
+    # Обрезает пробелы и переносы строки
+    if isinstance(text_output, str):
+        text_output = text_output.strip()
 
     return text_output
 
