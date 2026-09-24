@@ -6,6 +6,8 @@
 базе ресурсов из файла конфигурации.
 """
 
+from concurrent.futures import as_completed, ThreadPoolExecutor
+
 import requests
 from progress.bar import Bar
 from rich import console, print, table
@@ -90,32 +92,36 @@ class SearchByUsername:
         """
         print()  # Просто для более красивого вывода
 
-        for site, urls in self._target_urls.items():
+        with ThreadPoolExecutor(max_workers=10) as executor:
+            future_to_platform = {
+                executor.submit(
+                    self._send_request, url["url_user"], username
+                ): site
+                for site, url in self._target_urls.items()
+            }
+            for future in as_completed(future_to_platform):
+                site: str = future_to_platform[future]
+                self._progress_bar.suffix = \
+                    config.PROGRESS_BAR_SUFFIX_BASE.format(site=site)
+                try:
+                    result = future.result()
+                    if result:
+                        self._result["found"].append([site, result])
+                except Exception:
+                    pass
+                self._progress_bar.next()
+            self._progress_bar.finish()
 
-            # Показывает в шкале прогресса сайт к которому идёт запрос
-            self._progress_bar.suffix = config.PROGRESS_BAR_SUFFIX_BASE.format(
-                site=site
-            )
-            url: str = urls["url_user"].format(username)
 
-            try:
-                status_code: int = requests.get(url, timeout=5).status_code
-
-                # Статус код "The HTTP 200 OK" зачастую указывает на наличие
-                # профиля пользователя на сайте. Будет улучшено в дальнейшем
-                if status_code == 200:
-                    self._result["found"].append([site, url])
-                else:
-                    self._result["not found"].append([url, "None"])
-
-            # Может быть ошибка при установке соединения. Например, если
-            # доступ к сайту в регионе заблокирован. Будет улучшено
-            except Exception as e:
-                self._result["not found"].append([url, e])
-
-            self._progress_bar.next()
-
-        self._progress_bar.finish()
+    def _send_request(self, url: str, username: str) -> str | None:
+        url: str = url.format(username)
+        try:
+            status_code: int = requests.get(url, timeout=5).status_code
+            if status_code == 200:
+                return url
+            return None
+        except Exception:
+            return None
 
     def show(self) -> None:
         """
