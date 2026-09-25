@@ -3,12 +3,21 @@ github = "https://github.com/OlegDryahlov/ShiroGaze"
 version = "0.1.4"
 
 
+[filters]
+response_body = true
+response_body_not_null = true
+keywords = true
+keywords_list = [
+    "404",
+    "not found",
+    "not exist"
+]
+
+
 [files]
-app_about = ["data", "about.txt"]
-app_description = ["data", "description.txt"]
-app_logo = ["data", "logo.txt"]
 target_urls = ["data", "url.json"]
 text = ["data", "text.toml"]
+
 
 [progress_bar]
 fill = "#"

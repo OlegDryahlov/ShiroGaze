@@ -100,7 +100,7 @@ class SearchByUsername:
         with ThreadPoolExecutor(max_workers=10) as executor:
             future_to_platform = {
                 executor.submit(
-                    self._send_request, site, url["url_user"], username
+                    self._send_request, url["url_user"], username
                 ): site
                 for site, url in self._target_urls.items()
             }
@@ -117,7 +117,7 @@ class SearchByUsername:
                 self._progress_bar.next()
             self._progress_bar.finish()
 
-    def _send_request(self, site, url: str, username: str) -> str | None:
+    def _send_request(self, url: str, username: str) -> str | None:
         url: str = url.format(username)
         try:
             response: requests.Response = requests.get(
@@ -125,23 +125,27 @@ class SearchByUsername:
             )
         except Exception:
             return None
+
         if response.status_code != 200:
             return None
+
         response_text: str = response.text.lower()
         response_body: list = re.findall(
             "<body>(.*?)</body>", response_text, re.DOTALL
         )
-        if not response_body:
+
+        if config.F_RESPONSE_BODY and (not response_body):
             return None
-        if not response_body[0].strip():
+
+        if config.F_RESPONSE_BODY_NOT_NULL and (not response_body[0].strip()):
             return None
-        for i in ["404", "not found", "not exist"]:
-            if i in response_text:
-                return None
-        if username not in response.url or "404" in response.url:
-            return None
+
+        if config.F_KEYWORDS:
+            for i in config.F_KEYWORDS_LIST:
+                if i in response_text:
+                    return None
+
         return url
- 
 
     def show(self) -> None:
         """
